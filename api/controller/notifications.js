@@ -33,3 +33,33 @@ exports.addTaskNotifications=(data)=>{
     }
 }
 
+exports.addTimesheetSubmittedkNotifications=(data)=>{
+  console.log("req",data)
+    try{
+    const notifications = new Notifications({
+        _id: new mongoose.Types.ObjectId(),
+        title : "Timesheet",
+        description:data.Task.message,
+        icon : 'heroicons_solid:mail',
+        read:false,
+        user_id:data.Task.assignto,
+        link:data.category+'/view/'+data.Task.timesheet._id,
+        category:data.category,
+        categoryid:data.Task.timesheet._id,
+        createdAt:new Date(),
+      });
+      notifications
+        .save()
+        .then((result) => {
+          process.emit('notification', {user:data.Task.assignto,notification:result});
+          console.log(result);
+        })
+        .catch((error) => {
+          console.log(error,"error")
+        })
+    }
+    catch(error){
+        console.log(error);
+
+    }
+}

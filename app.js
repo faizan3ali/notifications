@@ -68,6 +68,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("register", (payload) => {
+
     var socketBucket = getSocketBucketByUserID(payload._id);
     if (!socketBucket) {
       socketBucket = {
@@ -82,10 +83,12 @@ io.on("connection", (socket) => {
       }
       socketBucket.sockets.push(socket.id);
     }
+    console.log("user is connected",sockets_buckets)
   });
 });
 
 process.on("notification", async (payload) => {
+  console.log("realetime",payload.user)
   var recipientSocket = getSocketBucketByUserID(payload.user);
   if (recipientSocket && Array.isArray(recipientSocket.sockets)) {
     recipientSocket.sockets.forEach((socket_id) => {
