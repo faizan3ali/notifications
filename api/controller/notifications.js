@@ -2,7 +2,7 @@ const Notifications = require("../models/notifications");
 const mongoose = require("mongoose");
 
 exports.addTaskNotifications=(data)=>{
-  console.log("req",data)
+  console.log("reqs",data)
     try{
     const notifications = new Notifications({
         _id: new mongoose.Types.ObjectId(),
@@ -11,7 +11,7 @@ exports.addTaskNotifications=(data)=>{
         icon : 'heroicons_outline:check-circle',
         read:false,
         user_id:data.Task.assignedTo[0],
-        link:data.category+'s/'+data.Task._id,
+        link:data.category+'s/'+data.Task.id,
         category:data.Task.category,
         categoryid:data.Task.id,
         createdAt:new Date(),
