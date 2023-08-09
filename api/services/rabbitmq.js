@@ -17,7 +17,7 @@ const notifications = require("../controller/notifications")
             let message= `${Buffer.from(data.content)}`
             channel.ack(data);//acknowledge the main server
              message=JSON.parse(data.content)
-
+console.log("message",message)
             switch (message.category) {
                 case "task":
                     notifications.addTaskNotifications(message)
@@ -25,6 +25,9 @@ const notifications = require("../controller/notifications")
                     case "timesheets":
                       notifications.addTimesheetSubmittedkNotifications(message)
                       break;
+                      case "SignUp":
+                        notifications.addNewSignUpUserNotification(message)
+                        break;
                 default:
                     break;
             }
