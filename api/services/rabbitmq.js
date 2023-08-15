@@ -8,10 +8,10 @@ const notifications = require("../controller/notifications")
  */
  exports.connectQueue = async () => {
     try {
-         //for local
-    //  amqp://127.0.0.1
 
-    connection = await amqp.connect("amqp://172.17.0.3");
+ //const amqpServer = process.env.RabbitMQ_URL || "amqp://127.0.0.1";
+
+ const amqpServer = process.env.RabbitMQ_URL || "amqp://172.17.0.2";
         channel    = await connection.createChannel()
 
         await channel.assertQueue("notifications")
