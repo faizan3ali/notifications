@@ -8,7 +8,10 @@ const notifications = require("../controller/notifications")
  */
  exports.connectQueue = async () => {
     try {
-        connection = await amqp.connect("amqp://127.0.0.1");
+         //for local
+    //  amqp://127.0.0.1
+
+    connection = await amqp.connect("amqp://172.17.0.3");
         channel    = await connection.createChannel()
 
         await channel.assertQueue("notifications")
