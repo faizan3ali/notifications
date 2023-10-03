@@ -3,7 +3,16 @@ const app = express();
 const mongoose = require("mongoose");
 const connectDB = require("./dbconnection");
 const rabbitMQ = require("./api/services/rabbitmq");
+
+const checkProjectEndDate = require("./api/cronJobs/projectEndDateChecker");
+
+
+//cron job
+console.log("cron job")
+checkProjectEndDate();
+
 connectDB();
+
 const cors = require("cors");
 app.use(cors());
 try {
@@ -96,6 +105,7 @@ process.on("notification", async (payload) => {
     });
   }
 });
+
 http.listen(port, () => {
   console.log("listening on :" + port);
 });

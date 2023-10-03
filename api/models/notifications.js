@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const notificationsSchema = mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   createdAt: { type: Date },
- 
   title : {type:String},
   description:{type : String}, 
   read:{type:Boolean},

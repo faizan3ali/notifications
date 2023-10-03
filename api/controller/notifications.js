@@ -1,7 +1,8 @@
 const Notifications = require("../models/notifications");
+const User = require("../models/user");
 const mongoose = require("mongoose");
 
-const createNotification = async (notificationData) => {
+exports.createNotification = async (notificationData) => {
   try {
     const notifications = new Notifications({
       _id: new mongoose.Types.ObjectId(),
@@ -11,7 +12,7 @@ const createNotification = async (notificationData) => {
     });
 
     const result = await notifications.save();
-    console.log("resultresult", notificationData.user_id);
+    console.log("result", notificationData.user_id);
     process.emit('notification', { user: notificationData.user_id, notification: result });
     console.log(result);
   } catch (error) {
@@ -34,6 +35,8 @@ exports.addTaskNotifications = (data) => {
 
   createNotification(notificationData);
 };
+
+
 
 exports.addTimesheetSubmittedkNotifications = (data) => {
   console.log("req", data);
