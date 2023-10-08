@@ -1,6 +1,6 @@
 const cron = require('node-cron');
-const User = require("../models/user");
 const notifications = require("../controller/notifications")
+const mongoose = require("mongoose");
 
 const checkProjectEndDate = async () => {
 try {
