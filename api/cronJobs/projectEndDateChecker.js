@@ -1,10 +1,10 @@
 const cron = require('node-cron');
-const Project = require("../models/project");
 const User = require("../models/user");
 const notifications = require("../controller/notifications")
 
 const checkProjectEndDate = async () => {
 try {
+  const Project = mongoose.model("Project");
   cron.schedule('0 0 * * *', async () => {
     let currentDate = new Date();
     console.log('Checking project end dates')

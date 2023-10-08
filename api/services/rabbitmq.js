@@ -10,9 +10,9 @@ const notifications = require("../controller/notifications")
  exports.connectQueue = async () => {
     try {
 
- const amqpServer = process.env.RabbitMQ_URL || "amqp://127.0.0.1";
+//  const amqpServer = process.env.RabbitMQ_URL || "amqp://127.0.0.1";
 
- //const amqpServer = process.env.RabbitMQ_URL || "amqp://172.17.0.2";
+ const amqpServer = process.env.RabbitMQ_URL || "amqp://172.17.0.2";
  console.log("Rabbit Mq Url :",amqpServer)
  connection = await amqp.connect(amqpServer);
         channel    = await connection.createChannel()
@@ -23,7 +23,6 @@ const notifications = require("../controller/notifications")
             let message= `${Buffer.from(data.content)}`
             channel.ack(data);//acknowledge the main server
              message=JSON.parse(data.content)
-console.log("message",message)
             switch (message.category) {
                 case "task":
                     notifications.addTaskNotifications(message)
