@@ -1,20 +1,27 @@
+// mongoose import
 const mongoose = require('mongoose');
-const connectDB = async () => {
-    try {
-      // const url =
-      // "mongodb+srv://root:" +
-      // process.env.MONGO_ATLAS_PASS +
-      // "@docdb-2022-02-17-21-16-45.cluster-c6uvus96jlgd.eu-central-1.docdb.amazonaws.com:27017/?ssl=true&ssl_ca_certs=rds-combined-ca-bundle.pem&replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
+const Notifications = require("./api/models/notifications");
 
-      const prodUrl = "mongodb://localhost:27017/main"
-      //const prodUrl = "mongodb://admin:admin1234@localhost:27017/admin"
-      const conn = await mongoose.connect(prodUrl, {
-        useNewUrlParser: true,useUnifiedTopology: true
-      });
-      console.log(`MongoDB Connected:` ,conn.connection.host);
+// Import other models as needed
+
+// a function that takes database name and database url as import and return a mongoose connection
+const connectDb = async (dbName, dbUrl) => {
+    if (dbName === mongoose.connection?.client?.s.options.dbName) return mongoose;
+
+    try {
+        if (mongoose.connection.readyState === 1) {
+            return mongoose.connection.useDb(dbName);
+        } else {
+            await mongoose.connect(dbUrl, {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            });
+            console.log(`Connected to ${dbUrl}`);
+            return mongoose.connection.useDb(dbName);
+        }
     } catch (error) {
-      console.error(error.message);
-      process.exit(1);
+        console.error(error);
     }
-  }
-  module.exports = connectDB
+};
+
+module.exports = { connectDb };

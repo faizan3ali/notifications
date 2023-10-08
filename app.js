@@ -1,20 +1,57 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const connectDB = require("./dbconnection");
+const { connectDb } = require("./dbconnection"); // Import your connectDb function
 const rabbitMQ = require("./api/services/rabbitmq");
-
+const cors = require("cors");
 const checkProjectEndDate = require("./api/cronJobs/projectEndDateChecker");
 
 
-//cron job
-console.log("cron job")
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cors());
+
+
+app.use((req, res, next) => {
+  // Parse the Origin header to extract the subdomain
+  const origin = req.get("Origin");
+  if (origin) {
+    const subdomainMatch = origin.match(/https?:\/\/([^.]+)\./);
+    if (subdomainMatch && subdomainMatch[1]) {
+      const subdomain = subdomainMatch[1];
+      // Store the extracted subdomain in a variable accessible to other middleware and routes
+      req.subdomain = subdomain;
+    }
+  }
+  next();
+});
+
+app.use(async (req, res, next) => {
+  try {
+    const {subdomain} = req;
+    let dbName = '';
+    if(subdomain == 'butsch'){
+      dbName = 'admin';
+    }
+    else{
+      dbName = subdomain;
+    }
+    const connection = await connectDb(dbName, "mongodb://admin:admin1234@localhost:27017/");
+    console.log("Connected to database for subdomain:", req.subdomain);
+    req.database = connection; // Attach the connection to the request object
+    next();
+  } catch (error) {
+    console.error(`Database connection error for subdomain ${req.subdomain}:`, error);
+    next(error);
+  }
+});
+
+app.use(cors());
+
 checkProjectEndDate();
 
-connectDB();
 
-const cors = require("cors");
-app.use(cors());
+
 try {
   rabbitMQ.connectQueue(); // call the connect function
 } catch (error) {
@@ -31,6 +68,8 @@ const io = require("socket.io")(http, {
     origins: "*",
   },
 });
+
+
 var sockets_buckets = [];
 function getSocketBucketByUserID(user_id) {
   if (Array.isArray(sockets_buckets) && user_id) {

@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 
 exports.createNotification = async (notificationData) => {
   try {
+    const Notifications = mongoose.model("Notifications");
     const notifications = new Notifications({
       _id: new mongoose.Types.ObjectId(),
       ...notificationData,
