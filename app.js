@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-// const mongoose = require("mongoose");
-// const connectDB = require("./dbconnection");
+const mongoose = require("mongoose");
+const connectDB = require("./dbconnection");
 const rabbitMQ = require("./api/services/rabbitmq");
 
 const checkProjectEndDate = require("./api/cronJobs/projectEndDateChecker");
@@ -11,7 +11,7 @@ const checkProjectEndDate = require("./api/cronJobs/projectEndDateChecker");
 console.log("cron job")
 checkProjectEndDate();
 
-// connectDB();
+connectDB();
 
 const cors = require("cors");
 app.use(cors());
