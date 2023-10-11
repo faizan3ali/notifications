@@ -33,7 +33,7 @@ exports.addTaskNotifications = (data) => {
     createdby: data.Task.createdBy
   };
 
-  createNotification(notificationData);
+  this.createNotification(notificationData);
 };
 
 
@@ -49,7 +49,7 @@ exports.addTimesheetSubmittedkNotifications = (data) => {
     category: data.category,
     categoryid: data.Task.timesheet._id
   };
-  createNotification(notificationData);
+  this.createNotification(notificationData);
 };
 
 //create a notification for all master users
@@ -66,7 +66,7 @@ UserAssign.forEach(element => {
     category: 'NewUser',
     categoryid: data.User._id
   };
-  createNotification(notificationData);
+  this.createNotification(notificationData);
 });
 
 
