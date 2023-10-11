@@ -2,8 +2,9 @@ const Notifications = require("../models/notifications");
 const User = require("../models/user");
 const mongoose = require("mongoose");
 
-exports.createNotification = async (notificationData) => {
+exports.createNotification = async (notificationData, mongooseConn) => {
   try {
+    const Notifications = mongooseConn.model('Notifications');
     const notifications = new Notifications({
       _id: new mongoose.Types.ObjectId(),
       ...notificationData,
@@ -20,7 +21,7 @@ exports.createNotification = async (notificationData) => {
   }
 };
 
-exports.addTaskNotifications = (data) => {
+exports.addTaskNotifications = (data, mongooseConn) => {
 
   const notificationData = {
     title: data.Task.title,
@@ -33,12 +34,12 @@ exports.addTaskNotifications = (data) => {
     createdby: data.Task.createdBy
   };
 
-  this.createNotification(notificationData);
+  this.createNotification(notificationData, mongooseConn);
 };
 
 
 
-exports.addTimesheetSubmittedkNotifications = (data) => {
+exports.addTimesheetSubmittedkNotifications = (data, mongooseConn) => {
   console.log("req", data);
   const notificationData = {
     title: "Timesheet",
@@ -49,11 +50,11 @@ exports.addTimesheetSubmittedkNotifications = (data) => {
     category: data.category,
     categoryid: data.Task.timesheet._id
   };
-  this.createNotification(notificationData);
+  this.createNotification(notificationData, mongooseConn);
 };
 
 //create a notification for all master users
-exports.addNewSignUpUserNotification=(data)=>{
+exports.addNewSignUpUserNotification=(data, mongooseConn)=>{
   console.log("req", data);
 let UserAssign=data.UserAssignIds;
 UserAssign.forEach(element => {
@@ -66,7 +67,7 @@ UserAssign.forEach(element => {
     category: 'NewUser',
     categoryid: data.User._id
   };
-  this.createNotification(notificationData);
+  this.createNotification(notificationData, mongooseConn);
 });
 
 

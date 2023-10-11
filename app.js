@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
-const mongoose = require("mongoose");
-const connectDB = require("./dbconnection");
+// const mongoose = require("mongoose");
+// const connectDB = require("./dbconnection");
 const rabbitMQ = require("./api/services/rabbitmq");
 
 const checkProjectEndDate = require("./api/cronJobs/projectEndDateChecker");
@@ -11,7 +11,7 @@ const checkProjectEndDate = require("./api/cronJobs/projectEndDateChecker");
 console.log("cron job")
 checkProjectEndDate();
 
-connectDB();
+// connectDB();
 
 const cors = require("cors");
 app.use(cors());
@@ -31,6 +31,7 @@ const io = require("socket.io")(http, {
     origins: "*",
   },
 });
+
 var sockets_buckets = [];
 function getSocketBucketByUserID(user_id) {
   if (Array.isArray(sockets_buckets) && user_id) {
@@ -43,26 +44,6 @@ function getSocketBucketByUserID(user_id) {
   }
 }
 
-function getSocketBucketByUserID(user_id) {
-  if (Array.isArray(sockets_buckets) && user_id) {
-    var socket_bucket = sockets_buckets.find(function (socket_bucket) {
-      return socket_bucket._id.toString() === user_id.toString();
-    });
-    return socket_bucket;
-  } else {
-    sockets_buckets = [];
-  }
-}
-
-function getSocketBucketBySocketID(socket_id) {
-  var socket_bucket = sockets_buckets.find(function (socket_bucket) {
-    var index = socket_bucket.sockets.indexOf(socket_id);
-    if (index > -1) {
-      return true;
-    }
-  });
-  return socket_bucket;
-}
 
 io.on("connection", (socket) => {
   // Disconnection of socket
