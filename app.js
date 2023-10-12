@@ -1,19 +1,8 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
-// const mongoose = require("mongoose");
-// const connectDB = require("./dbconnection");
 const rabbitMQ = require("./api/services/rabbitmq");
 
-const checkProjectEndDate = require("./api/cronJobs/projectEndDateChecker");
-
-
-//cron job
-console.log("cron job")
-checkProjectEndDate();
-
-// connectDB();
-
-const cors = require("cors");
 app.use(cors());
 try {
   rabbitMQ.connectQueue(); // call the connect function
@@ -44,6 +33,16 @@ function getSocketBucketByUserID(user_id) {
   }
 }
 
+
+function getSocketBucketBySocketID(socket_id) {
+  var socket_bucket = sockets_buckets.find(function (socket_bucket) {
+    var index = socket_bucket.sockets.indexOf(socket_id);
+    if (index > -1) {
+      return true;
+    }
+  });
+  return socket_bucket;
+}
 
 io.on("connection", (socket) => {
   // Disconnection of socket

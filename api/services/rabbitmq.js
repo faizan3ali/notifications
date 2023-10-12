@@ -11,9 +11,9 @@ var connection, channel;
 exports.connectQueue = async () => {
     try {
 
-        const amqpServer = process.env.RabbitMQ_URL || "amqp://127.0.0.1";
+        //const amqpServer = process.env.RabbitMQ_URL || "amqp://127.0.0.1";
 
-        //const amqpServer = process.env.RabbitMQ_URL || "amqp://172.17.0.2";
+        const amqpServer = process.env.RabbitMQ_URL || "amqp://172.17.0.2";
         console.log("Rabbit Mq Url :", amqpServer)
         connection = await amqp.connect(amqpServer);
         channel = await connection.createChannel()
@@ -24,10 +24,10 @@ exports.connectQueue = async () => {
             let message = `${Buffer.from(data.content)}`
             channel.ack(data);//acknowledge the main server
             message = JSON.parse(data.content);
-            const dbName = message.database;
+          const dbName = message.database;
             const mongoUri = `mongodb://admin:admin1234@localhost:27017/${dbName}`;
             const mongooseConn = mongoose.createConnection(mongoUri);
-            switch (message.category) {
+          switch (message.category) {
                 case "task":
                     notifications.addTaskNotifications(message, mongooseConn)
                     break;
