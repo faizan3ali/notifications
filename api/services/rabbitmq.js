@@ -1,6 +1,8 @@
 const amqp = require("amqplib");
-const notifications = require("../controller/notifications")
 const mongoose = require("mongoose");
+const notifications = require("../controller/notifications");
+const {connectDb} = require("../../connectDb");
+
 
 /**
  * connectQueue
@@ -20,14 +22,14 @@ exports.connectQueue = async () => {
 
         await channel.assertQueue("notifications")
 
-        channel.consume("notifications", data => {
+        channel.consume("notifications", async (data) => {
             let message = `${Buffer.from(data.content)}`
             channel.ack(data);//acknowledge the main server
             message = JSON.parse(data.content);
-          const dbName = message.database;
-            const mongoUri = `mongodb://admin:admin1234@localhost:27017/${dbName}`;
-            const mongooseConn = mongoose.createConnection(mongoUri);
-          switch (message.category) {
+            const dbName = message.database;
+            const mongoUri = `mongodb://admin:admin1234@localhost:27017/`;
+            const mongooseConn = await connectDb(dbName, mongoUri);
+            switch (message.category) {
                 case "task":
                     notifications.addTaskNotifications(message, mongooseConn)
                     break;
