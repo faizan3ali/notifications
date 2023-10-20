@@ -34,6 +34,9 @@ exports.connectQueue = async () => {
                 case "SignUp":
                     notifications.addNewSignUpUserNotification(message)
                     break;
+                case "CronJob":
+                      notifications.createNotification(message)
+                      break;
                 default:
                     break;
             }

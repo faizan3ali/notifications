@@ -4,12 +4,6 @@ const mongoose = require("mongoose");
 const connectDB = require("./dbconnection");
 const rabbitMQ = require("./api/services/rabbitmq");
 
-const checkProjectEndDate = require("./api/cronJobs/projectEndDateChecker");
-
-
-//cron job
-console.log("cron job")
-checkProjectEndDate();
 
 connectDB();
 
