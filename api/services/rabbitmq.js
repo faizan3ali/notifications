@@ -2,8 +2,6 @@ const amqp = require("amqplib");
 const mongoose = require("mongoose");
 const notifications = require("../controller/notifications");
 const {connectDb} = require("../../connectDb");
-
-
 /**
  * connectQueue
  *
@@ -29,16 +27,21 @@ exports.connectQueue = async () => {
             const dbName = message.database;
             const mongoUri = `mongodb://admin:admin1234@localhost:27017/`;
             const mongooseConn = await connectDb(dbName, mongoUri);
+            message = JSON.parse(data.content)
+            console.log("message", message)
             switch (message.category) {
                 case "task":
-                    notifications.addTaskNotifications(message, mongooseConn)
+                    notifications.addTaskNotifications(message)
                     break;
                 case "timesheets":
-                    notifications.addTimesheetSubmittedkNotifications(message, mongooseConn)
+                    notifications.addTimesheetSubmittedkNotifications(message)
                     break;
                 case "SignUp":
-                    notifications.addNewSignUpUserNotification(message, mongooseConn)
+                    notifications.addNewSignUpUserNotification(message)
                     break;
+                case "CronJob":
+                      notifications.createNotification(message)
+                      break;
                 default:
                     break;
             }
